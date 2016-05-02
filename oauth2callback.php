@@ -16,8 +16,8 @@ require 'vendor/autoload.php';
  * http://localhost:8080/oauth2callback.php
  ************************************************/
 
-$client_id = 'YOUR - CLIENT ID';
-$client_secret = 'YOUR SECRETE';
+$client_id = 'your client id';
+$client_secret = 'your client secrete';
 $redirect_uri = 'http://localhost:8080/oauth2callback.php';
 
 /************************************************
@@ -31,7 +31,7 @@ $client = new Google_Client();
 $client->setClientId($client_id);
 $client->setClientSecret($client_secret);
 $client->setRedirectUri($redirect_uri);
-$client->addScope("openid email");
+$client->addScope("openid email profile");
 
 /************************************************
  * If we're logging out we just need to clear our
@@ -87,6 +87,12 @@ if (isset($authUrl)) {
     $email = $var1->getAttributes()['payload']['email'];
 
     $_SESSION['user'] = $email;
+
+    $plus = new Google_Service_Plus($client);
+    $_SESSION['me'] = $plus->people->get('me');;
+
+
+
     if (isset($_SESSION['redirect'])) {
         $uri_redirect = $_SESSION['redirect'];
         unset($_SESSION['redirect']);
